@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+</head>
+<body>
+    <h1>Admin Panel</h1>
+    <div id="userList"></div>
+
+    <script>
+        let users = JSON.parse(localStorage.getItem("users")) || [];
+        let currentUser = users.find(user => user.isAdmin);
+
+        if (!currentUser) {
+            alert("Nincs admin jogosultságod!");
+            window.location.href = "index.html"; // 🔥 Nem admin? Visszadobjuk
+        }
+
+        let userListDiv = document.getElementById("userList");
+        userListDiv.innerHTML = "<h2>Felhasználók:</h2>";
+
+        users.forEach(user => {
+            userListDiv.innerHTML += `<p>👤 ${user.username} | ID: ${user.userID} | IP: ${user.userIP} | Admin: ${user.isAdmin ? "✅" : "❌"}</p>`;
+        });
+    </script>
+</body>
+</html>
